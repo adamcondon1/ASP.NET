@@ -1,0 +1,57 @@
+﻿
+@{
+    ViewBag.Title = "Search";
+}
+
+<h2>Search for player id</h2>
+<div class="col-md-10">
+    <input type="text" id="PlayerID" size="2" />
+    <input type="submit" name="SearchButton" id="SearchButton" value="Search" />
+
+</div>
+<br/>
+<div id="divProcessing">
+<p>Processing Please wait.....</p>
+</div>
+</br>
+<div id="divResult"></div>
+
+@section Scripts{
+    
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script type="text/javascript">
+import { search } from "modernizr";
+
+    $(document).ready(function () {
+
+        $("divProcessing").hide();
+        $("SearchButton").click(function () {
+            search();
+        });
+    });
+        function search() {
+            $("divResult").empty();
+            $("divProcessing").show();
+            var bookId = $("#BookId").val();
+            var url = "..api/Books" + bookId;
+            $.ajax({
+                url: url,
+                type: "GET",
+                dataType: "json",
+                success: function (resp) {
+                    $("divProcessing").hide();
+                    $("<h3>Results</h3>").appendTo("divResult");
+                    $("divResult").append("<p>Name:</p>" + resp.Name + "</br Position:>" + resp.Position + "</br>");
+                    $("divResult").append("Coaches:</br>");
+                    for (var i = 0; i < resp.Coaches.length; i++) {
+                        $("divResult").append(resp.Coaches[i]Name + " " + resp.Coaches[i].Name + "</br>");
+
+                    }
+                    $("divResult").append("</p>");
+                }
+            })
+        
+    }
+    </script>
+    }
